@@ -87,7 +87,7 @@ export class FilesystemCache {
   }
 
   async clearAllCache() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       fs.readdir(this.getDir(''), (err, files) => {
         if (err) throw err;
         for (const file of files) {
@@ -164,7 +164,7 @@ export class FilesystemCache {
         const saved = stats.mtime;
         const expires = new Date(
           saved.getTime() +
-          parseInt(this.cacheConfig.cacheDurationMinutes) * 60 * 1000
+            parseInt(this.cacheConfig.cacheDurationMinutes) * 60 * 1000
         );
         return {
           saved,
@@ -197,7 +197,7 @@ export class FilesystemCache {
 
     // remove trailing slash from key
     cacheKey = cacheKey.replace(/\/$/, '');
-    return cacheKey
+    return cacheKey;
   }
 
   private async handleInvalidateRequest(ctx: Koa.Context, url: string) {
@@ -214,8 +214,6 @@ export class FilesystemCache {
     ctx.status = 200;
   }
 
-
-
   /**
    * Returns middleware function.
    */
@@ -227,7 +225,6 @@ export class FilesystemCache {
       ctx: Koa.Context,
       next: () => Promise<unknown>
     ) {
-
       const cacheKey = this.sanitizeKey(ctx.url);
       // key is hashed crudely
       const key = this.hashCode(cacheKey);
@@ -254,6 +251,7 @@ export class FilesystemCache {
               typeof payload === 'object' &&
               payload.type === 'Buffer'
             ) {
+              // @ts-expect-error ts-mismatch
               ctx.body = Buffer.from(payload);
             } else {
               ctx.body = payload;
