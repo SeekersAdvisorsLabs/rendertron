@@ -38,7 +38,10 @@ export class Renderer {
       return true;
     }
 
-    if (this.config.restrictedUrlPattern && requestUrl.match(new RegExp(this.config.restrictedUrlPattern))) {
+    if (
+      this.config.restrictedUrlPattern &&
+      requestUrl.match(new RegExp(this.config.restrictedUrlPattern))
+    ) {
       return true;
     }
 
@@ -109,7 +112,7 @@ export class Renderer {
       try {
         await page.emulateTimezone(timezoneId);
       } catch (e) {
-        if (e.message.includes('Invalid timezone')) {
+        if (e instanceof Error && e.message.includes('Invalid timezone')) {
           return {
             status: 400,
             customHeaders: new Map(),
@@ -193,7 +196,7 @@ export class Renderer {
     }
     // Original status codes which aren't 200 always return with that status
     // code, regardless of meta tags.
-    if (statusCode === 200 && newStatusCode) {
+    if (newStatusCode) {
       statusCode = newStatusCode;
     }
 

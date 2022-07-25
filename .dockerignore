@@ -1,0 +1,7 @@
+.github
+.vscode
+bin
+docs
+middleware
+node_modules
+test-resources

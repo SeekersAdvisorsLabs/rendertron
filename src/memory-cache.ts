@@ -57,7 +57,7 @@ export class MemoryCache {
       saved: new Date(),
       expires: new Date(
         now.getTime() +
-        parseInt(this.config.cacheConfig.cacheDurationMinutes) * 60 * 1000
+          parseInt(this.config.cacheConfig.cacheDurationMinutes) * 60 * 1000
       ),
       headers: JSON.stringify(headers),
       payload: JSON.stringify(payload),
@@ -107,7 +107,7 @@ export class MemoryCache {
 
     // remove trailing slash from key
     cacheKey = cacheKey.replace(/\/$/, '');
-    return cacheKey
+    return cacheKey;
   }
 
   middleware() {
@@ -154,7 +154,11 @@ export class MemoryCache {
     await next();
 
     if (ctx.status === 200) {
-      this.cacheContent(cacheKey, ctx.response.headers, ctx.body);
+      const headers: Record<string, string> = {};
+      for (const [key, value] of Object.entries(ctx.response.headers)) {
+        headers[key] = <string>value;
+      }
+      this.cacheContent(cacheKey, headers, Buffer.from(<string>ctx.body));
     }
   }
 

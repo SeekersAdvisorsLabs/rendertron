@@ -59,7 +59,7 @@ export class ConfigManager {
     puppeteerArgs: ['--no-sandbox'],
     renderOnly: [],
     closeBrowser: false,
-    restrictedUrlPattern: null
+    restrictedUrlPattern: null,
   };
 
   static async getConfiguration(): Promise<Config> {
