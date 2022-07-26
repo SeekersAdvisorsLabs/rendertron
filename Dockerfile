@@ -6,13 +6,20 @@ RUN apt update && apt dist-upgrade -y && \
   echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
   apt-get update && apt-get -y install google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1
 
-ADD ./ /srv
-
-RUN npm --prefix /srv install && \
-  npm --prefix /srv run build && \
-  rm -Rf /tmp/* && \
-  rm -Rf /var/lib/apt/lists/*
-
 WORKDIR /srv
+
+COPY package.json ./
+COPY package-lock.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build 
+
+RUN rm -Rf /tmp/*
+RUN rm -Rf /var/lib/apt/lists/*
+
+ENV NODE_ENV production
 
 CMD ["npm", "start"]
