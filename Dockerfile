@@ -8,14 +8,13 @@ RUN apt update && apt dist-upgrade -y && \
 
 WORKDIR /srv
 
-COPY package.json ./
-COPY package-lock.json ./
-
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
 
 COPY . .
 
-RUN npm run build 
+RUN npm run build
 
 RUN rm -Rf /tmp/*
 RUN rm -Rf /var/lib/apt/lists/*
